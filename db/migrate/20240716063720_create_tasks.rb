@@ -7,7 +7,8 @@ class CreateTasks < ActiveRecord::Migration[7.0]
       t.text :status
       t.datetime :startDate
       t.datetime :endDate
-
+      t.belongs_to :category, null:true
+      
       t.index :id, unique: true
       t.timestamps
     end

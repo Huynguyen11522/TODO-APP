@@ -3,15 +3,12 @@ require 'securerandom'
 class Task < ApplicationRecord
   before_create :random_uid
   before_create :format_time
+  belongs_to :category, optional: true
 
   self.primary_key = :id
 
   def self.search_by(attr_name, attr_value)
-    if (attr_name.present? && attr_value.present?)
-      where("#{attr_name} ILIKE ?", "#{attr_value}")
-    else
-      all
-    end
+    where("#{attr_name} =?", "#{attr_value}")
   end
 
   private

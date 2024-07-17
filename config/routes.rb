@@ -1,3 +1,5 @@
 Rails.application.routes.draw do
-  resources "tasks"
+  resources :categories
+  resources :tasks
+  put '/updateStatus/:id', to: "tasks#update_status"
 end
