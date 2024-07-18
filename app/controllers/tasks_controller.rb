@@ -3,40 +3,42 @@ class TasksController < ApplicationController
 
   def index
     @post = Task.includes(:category)
-    render json: { status: 200, data: @post.all}, include: [:category] if filter_params.empty?
+    render json: { status: STATUS_CODE[:ok], data: @post.all}, include: [:category] if filter_params.empty?
     @post = @post.search_by(:status, filter_params[:status]) if filter_params[:status]
-    
-    render json: {status: 200, message: "Filter successfully", data: @post}, include: [:category]
+    @post = @post.date_between(filter_params[:date].to_datetime.strftime('%FT%R')) if filter_params[:date]
+    render json: {status: STATUS_CODE[:ok], message: STATUS_MESSAGE[:filter], data: @post}, include: [:category] unless filter_params.empty?
   end
 
   def show
-    render json: { status: 200, data: @task }, include: [:category]
+    render json: { status: STATUS_CODE[:ok], data: @task }, include: [:category]
   end
 
   def create
     @task = Task.new(task_params)
+    @task.title = @task.title.strip
+    @task.content = @task.content.strip
     @task.status = 1
-
+    raise StandardError unless @task.title.length > 0
     @task.save!
-    render json: { status: 200, message: 'Create successfully', data: @task }, status: :created
-    rescue NoMethodError
-      render json: { status: 400, message: "Bad Request" }, status: :bad_request
+    render json: { status: STATUS_CODE[:created], message: STATUS_MESSAGE[:create], data: @task }, status: :created
+    rescue StandardError
+      render json: { status: STATUS_CODE[:bad_request], message: STATUS_MESSAGE[:bad_request] }, status: :bad_request
   end
 
   def update 
     @task.update!(task_params)
-    render json: {status: 200, message: "Update Status successfully"}, status: :ok
+    render json: {status: STATUS_CODE[:ok], message: STATUS_MESSAGE[:update]}, status: :ok
   end
 
   def update_status
     params.permit(:status)
     @task.update!(status: params[:status])
-    render json: {status: 200, message: "Update Status successfully"}, status: :ok
+    render json: {status: STATUS_CODE[:ok], message: STATUS_MESSAGE[:update]}, status: :ok
   end
 
   def destroy
     @task.destroy!
-    render json: { status: 200, message: "Delete successfully" }, status: :ok
+    render json: { status: STATUS_CODE[:ok], message: STATUS_MESSAGE[:delete] }, status: :ok
   end
 
   private

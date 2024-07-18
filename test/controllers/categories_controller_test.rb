@@ -33,6 +33,6 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
       delete category_url(@category), as: :json
     end
 
-    assert_response :no_content
+    assert_response :success
   end
 end

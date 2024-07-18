@@ -1,6 +1,7 @@
 require 'securerandom'  
 
 class Task < ApplicationRecord
+
   before_create :random_uid
   before_create :format_time
   belongs_to :category, optional: true
@@ -9,6 +10,10 @@ class Task < ApplicationRecord
 
   def self.search_by(attr_name, attr_value)
     where("#{attr_name} =?", "#{attr_value}")
+  end
+
+  def self.date_between(check_date)
+    where("startDate <= ? AND ? <= endDate", check_date, check_date)
   end
 
   private

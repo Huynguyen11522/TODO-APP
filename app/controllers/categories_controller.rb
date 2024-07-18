@@ -4,30 +4,32 @@ class CategoriesController < ApplicationController
   def index
     @categories = Category.all
 
-    render json: { status: 200, data: @categories }
+    render json: { status: STATUS_CODE[:ok], data: @categories }
   end
 
   def show
-    render json: { status: 200, data: @category }
+    render json: { status: STATUS_CODE[:ok], data: @category }
   end
 
   def create
-  @category = Category.new(category_params)
-
+    @category = Category.new(category_params)
+    @category.title = @category.title.strip
+    @category.content = @category.content.strip
+    raise ActiveRecord::RecordNotFound unless @category.title.length > 0
     @category.save!
-    render json:  { status: 200, message: 'Create successfully', data: @category }, status: :created
-    rescue NoMethodError
-      render json: {status: 400, message: "Bad Request"}, status: :bad_request
+    render json:  { status: STATUS_CODE[:created], message: STATUS_MESSAGE[:create], data: @category }, status: :created
+    rescue ActiveRecord::RecordNotFound
+      render json: {status: STATUS_CODE[:bad_request], message: STATUS_MESSAGE[:bad_request] }, status: :bad_request
   end
 
   def update
     @category.update!(category_params)
-    render json: { status: 200, statusMessage: 'Updated successfully' }, status: :ok
+    render json: { status: STATUS_CODE[:ok], statusMessage: STATUS_MESSAGE[:update] }, status: :ok
   end
 
   def destroy
     @category.destroy
-    render json: { status: 200, message: "Delete successfully" }, status: :ok
+    render json: { status: STATUS_CODE[:ok], message: STATUS_MESSAGE[:delete] }, status: :ok
   end
 
   private

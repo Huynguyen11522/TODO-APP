@@ -20,7 +20,6 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     assert_difference('Task.count') do
       post tasks_url, params: { task: { title: "Me", content: "me", startDate: "2024-07-16T07:45:22.900Z", endDate: "2024-07-20T07:45:22.900Z" }}, as: :json
     end
-
-    assert_response :success j
+    assert_response :success
   end
 end
