@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyText
+  content: MyText
+  status: MyText
+  startDate: 2024-07-16T07:45:22.900Z
+  endDate: 2024-07-19T07:45:22.900Z
+
+two:
+  title: MyText
+  content: MyText
+  status: MyText
+  startDate: 2024-07-16T07:45:22.900Z
+  endDate: 2024-07-20T07:45:22.900Z
